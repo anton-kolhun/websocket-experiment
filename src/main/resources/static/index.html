@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        function webSocketTest() {
+
+            if ("WebSocket" in window) {
+                // alert("WebSocket is supported by your Browser!");
+
+                // Let us open a web socket
+                var ws = new WebSocket("ws://localhost:8080/myHandler");
+                ws.onopen = function () {
+
+                    // Web Socket is connected, send data using send()
+                    ws.send("Message to send");
+                    console.log("message sent")
+                };
+
+                ws.onmessage = function (evt) {
+                    var received_msg = evt.data;
+                    $("#wsresponse").get(0).innerHTML = received_msg;
+                    console.log(received_msg)
+                };
+
+                ws.onclose = function () {
+
+                    console.log("Connection closed")
+                };
+            } else {
+
+                // The browser doesn't support WebSocket
+                alert("WebSocket NOT supported by your Browser!");
+            }
+        }
+
+
+        var ws = new WebSocket("ws://localhost:8080/myHandler");
+
+        function sendText() {
+            ws.send($('#textToSend').val());
+        }
+
+    </script>
+
+</head>
+
+<body>
+<div id="sse">
+    <a href="javascript:webSocketTest()">Run WebSocket</a>
+</div>
+
+
+<input id="textToSend"/>
+<button onclick="sendText()">Send WS Text</button>
+<div id="wsresponse">
+</div>
+
+</body>
+</html>
